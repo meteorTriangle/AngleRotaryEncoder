@@ -10,20 +10,20 @@
 #include "Arduino.h"
 class rotaryEncoder {
   private:
-    static uint8_t PhaseCLK, PhaseDT;
-    static int counter;
-    static bool aState;
-    static bool aLastState;
-    static void encoderInterrupt();
+    uint8_t PhaseCLK, PhaseDT;
+    int counter;
+    bool aState;
+    bool aLastState;
   public:
     void setCLK(uint8_t);
     void setDT(uint8_t);
     void setPhase(uint8_t, uint8_t);
     void init();
     void startCounter();
+    void run();
     void resetCounter();
     void stopCounter();
-    int read(); 
+    int read();
 };
 void rotaryEncoder::setCLK(uint8_t CLKpin){ PhaseCLK = CLKpin; }
 void rotaryEncoder::setDT(uint8_t DTpin){ PhaseDT = DTpin; }
@@ -37,10 +37,9 @@ void rotaryEncoder::init(){
 }
 void rotaryEncoder::startCounter(){
   counter = 0;
-  attachInterrupt(digitalPinToInterrupt(PhaseCLK), rotaryEncoder::encoderInterrupt, CHANGE);
   aLastState = digitalRead(PhaseCLK);
 }
-void rotaryEncoder::encoderInterrupt(){
+void rotaryEncoder::run(){
   aState = digitalRead(PhaseCLK);
 
   if (aState != aLastState){
@@ -56,7 +55,6 @@ void rotaryEncoder::encoderInterrupt(){
 void rotaryEncoder::resetCounter(){
   detachInterrupt(PhaseCLK);
   counter = 0;
-  attachInterrupt(digitalPinToInterrupt(PhaseCLK), rotaryEncoder::encoderInterrupt, CHANGE);
   aLastState = digitalRead(PhaseCLK);
 }
 void rotaryEncoder::stopCounter(){
@@ -65,8 +63,6 @@ void rotaryEncoder::stopCounter(){
 int rotaryEncoder::read(){
   return(counter);
 }
-uint8_t rotaryEncoder::PhaseCLK, rotaryEncoder::PhaseDT;
-int rotaryEncoder::counter;
-bool rotaryEncoder::aState;
-bool rotaryEncoder::aLastState;
+
+
 #endif
