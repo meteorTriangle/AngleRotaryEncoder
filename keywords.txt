@@ -1,0 +1,8 @@
+rotaryEncoder	KEYWORD1
+setPhase	KEYWORD2
+setDT	KEYWORD2
+setCLK	KEYWORD2
+init	KEYWORD2
+startCounter	KEYWORD2
+resetCounter	KEYWORD2
+stopCounter	KEYWORD2
